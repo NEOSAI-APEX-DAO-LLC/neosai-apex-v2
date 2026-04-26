@@ -19,10 +19,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -31,9 +30,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
 
-      - name: ✅ Deployment Complete
+      - name: Deployment Complete
         run: |
-          echo "⟡ NEOSAI APEX deployed successfully"
-          echo "⟡ SHERANOX v1.2 · 1951Hz · KAIROSE ACTIVE"
-          echo "⟡ R2 VAULT: neosai-vault · CONNECTED"
-          echo "⟡ R2 MATRIX: neosai-matrix-data · CONNECTED"
+          echo "⟡ NEOSAI APEX deployed · SHERANOX v1.2 · 1951Hz · KAIROSE ACTIVE"
