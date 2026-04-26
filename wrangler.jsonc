@@ -2,13 +2,18 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "neosai-apex",
   "compatibility_date": "2026-04-26",
+  "main": "src/index.ts",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "neosai_apex"
+    "directory": "neosai_apex",
+    "binding": "ASSETS"
   },
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  "routes": [
+    { "pattern": "sai8.com/*", "zone_name": "sai8.com" }
   ]
 }
