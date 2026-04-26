@@ -1,0 +1,18 @@
+{
+  "name": "neosai-apex",
+  "version": "2.0.0",
+  "description": "NEOSAI APEX Platform — Cloudflare Worker · Authority: Robert Malik Sheran",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:lucid": "wrangler deploy --name 8plasmacell8",
+    "tail": "wrangler tail",
+    "types": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260401.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.57.0"
+  }
+}
