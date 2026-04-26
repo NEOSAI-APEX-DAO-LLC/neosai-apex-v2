@@ -22,8 +22,5 @@
       "binding": "MATRIX_DATA",
       "bucket_name": "neosai-matrix-data"
     }
-  ],
-  "routes": [
-    { "pattern": "sai8.com/*", "zone_name": "sai8.com" }
   ]
 }
