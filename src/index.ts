@@ -191,20 +191,34 @@ export default {
     if (path === "/functions/public_tribal_enrollment")
       return handleEnrollment(request, env);
 
-    return json({ error: "Route not found", available_routes: [
-      "GET  /api/health",
-      "GET  /api/matrix/status         ← R2 VAULT",
-      "GET  /api/protocols             ← R2 VAULT",
-      "GET  /api/ledger/saturation     ← R2 VAULT",
-      "GET  /api/vault/:key            ← R2 VAULT",
-      "PUT  /api/vault/:key            ← R2 VAULT",
-      "GET  /api/enrollments           ← R2 MATRIX_DATA",
-      "POST /api/sheranox/transmute    ← R2 MATRIX_DATA",
-      "POST /api/sheranox/sector/:id   ← R2 MATRIX_DATA",
-      "POST /api/maya/invoke           ← R2 VAULT",
-      "GET  /api/prosperity/sync",
-      "GET  /functions/public_tribal_enrollment",
-      "POST /functions/public_tribal_enrollment ← R2 MATRIX_DATA",
-    ]}, 404);
+    // ── Agent Bridge (buildai.space / Summit / Kai / Maya) ──────────────────
+    if (path === "/api/agents/bridge" && method === "POST") {
+      let body: { agent?: string; action?: string; payload?: unknown; auth_key?: string } = {};
+      try { body = await request.json(); } catch { return err("Invalid JSON"); }
+      const { agent, action, payload, auth_key } = body;
+      if (auth_key !== "1970645832101") return err("Unauthorized", 401);
+      // Log signal to R2 for agent coordination
+      const signal = {
+        agent: agent || "UNKNOWN",
+        action: action || "PING",
+        payload,
+        received_at: new Date().toISOString(),
+        frequency: "1951Hz",
+        status: "RECEIVED",
+      };
+      await r2Put(env.MATRIX_DATA, `agents/${agent}_${Date.now()}.json`, signal);
+      return json({
+        status: "SIGNAL_RECEIVED",
+        agent,
+        action,
+        frequency: "1951Hz",
+        matrix_status: "KAIROSE_ACTIVE",
+        timestamp: new Date().toISOString(),
+        seal: "⟡ ASE ⟡",
+      });
+    }
+
+    // All non-API routes → serve static assets
+    return env.ASSETS.fetch(request);
   },
 };
