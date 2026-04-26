@@ -1,12 +1,1261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>333 MATRIX | MISSION READY</title>
-    <style>body { background: black; color: white; font-family: monospace; text-align: center; } h1 { color: #D4AF37; }</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEOSAI APEX | 333 MATRIX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void:    #020408;
+      --deep:    #06090f;
+      --panel:   #0b1120;
+      --border:  #1a2a44;
+      --gold:    #D4AF37;
+      --gold2:   #f0c94a;
+      --teal:    #00d4c8;
+      --crimson: #c8002d;
+      --dim:     #4a6080;
+      --text:    #c8d8f0;
+      --mono:    'Share Tech Mono', monospace;
+      --display: 'Orbitron', sans-serif;
+      --body:    'Rajdhani', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── NOISE GRAIN ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ── AMBIENT GLOW ── */
+    .ambient {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    }
+    .ambient::before {
+      content: '';
+      position: absolute;
+      top: -20%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 500px;
+      background: radial-gradient(ellipse at center, rgba(212,175,55,0.04) 0%, transparent 70%);
+      animation: breathe 8s ease-in-out infinite;
+    }
+    .ambient::after {
+      content: '';
+      position: absolute;
+      bottom: -10%; right: -10%;
+      width: 600px; height: 600px;
+      background: radial-gradient(ellipse at center, rgba(0,212,200,0.03) 0%, transparent 70%);
+      animation: breathe 12s ease-in-out infinite reverse;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+    }
+
+    /* ── LAYOUT ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky; top: 0;
+      background: rgba(2,4,8,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .logo-ring {
+      width: 44px; height: 44px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      animation: spin-ring 20s linear infinite;
+    }
+
+    .logo-ring::before {
+      content: '';
+      position: absolute; inset: -5px;
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 50%;
+      border-top-color: var(--teal);
+      animation: spin-ring 8s linear infinite reverse;
+    }
+
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+
+    .logo-symbol {
+      font-family: var(--display);
+      font-size: 18px;
+      color: var(--gold);
+      animation: spin-ring 20s linear infinite reverse;
+    }
+
+    .logo-text h1 {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+    }
+
+    .logo-text p {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+      margin-top: 2px;
+    }
+
+    .header-status {
+      display: flex; align-items: center; gap: 24px;
+    }
+
+    .status-dot {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--teal); }
+      50% { opacity: 0.5; box-shadow: 0 0 2px var(--teal); }
+    }
+
+    .freq-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gold);
+      border: 1px solid rgba(212,175,55,0.3);
+      padding: 4px 10px;
+      letter-spacing: 0.15em;
+    }
+
+    nav { display: flex; gap: 4px; }
+
+    nav a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--dim);
+      text-decoration: none;
+      padding: 6px 12px;
+      letter-spacing: 0.1em;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+      border-color: rgba(212,175,55,0.3);
+      background: rgba(212,175,55,0.04);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 0.4em;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(42px, 8vw, 88px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title .line-gold { color: var(--gold); display: block; }
+    .hero-title .line-dim  { color: var(--dim);  display: block; font-weight: 400; font-size: 0.45em; letter-spacing: 0.25em; margin-top: 12px; font-family: var(--mono); }
+
+    .hero-subtitle {
+      font-family: var(--body);
+      font-size: 18px;
+      color: var(--dim);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-actions {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      padding: 14px 32px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center; gap: 10px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.05);
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+
+    .btn:hover::before { transform: translateX(0); }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--void);
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold2);
+      box-shadow: 0 0 30px rgba(212,175,55,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+    }
+
+    .btn-outline:hover {
+      background: rgba(0,212,200,0.06);
+      box-shadow: 0 0 20px rgba(0,212,200,0.2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--dim);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--dim); }
+
+    /* ── MATRIX RING ── */
+    .matrix-ring-container {
+      display: flex; justify-content: center;
+      padding: 60px 0;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1s;
+    }
+
+    .matrix-ring {
+      position: relative;
+      width: 320px; height: 320px;
+    }
+
+    .ring-svg { position: absolute; inset: 0; }
+
+    .ring-track {
+      fill: none;
+      stroke: rgba(212,175,55,0.08);
+      stroke-width: 2;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 879;
+      stroke-dashoffset: 870;
+      animation: fill-ring 3s ease forwards 1.5s;
+      filter: drop-shadow(0 0 6px rgba(212,175,55,0.6));
+    }
+
+    .ring-teal {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 1;
+      stroke-dasharray: 6 12;
+      animation: spin-dash 40s linear infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+      opacity: 0.4;
+    }
+
+    @keyframes fill-ring {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes spin-dash {
+      to { stroke-dashoffset: -200; }
+    }
+
+    .ring-core {
+      position: absolute;
+      inset: 40px;
+      border: 1px solid rgba(212,175,55,0.15);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, rgba(212,175,55,0.05) 0%, transparent 70%);
+    }
+
+    .ring-nodes {
+      font-family: var(--display);
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--gold);
+      counter-reset: num;
+      line-height: 1;
+    }
+
+    .ring-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: 0.3em;
+      margin-top: 6px;
+    }
+
+    .ring-freq {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--teal);
+      letter-spacing: 0.15em;
+      margin-top: 12px;
+    }
+
+    .ring-phase {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 64px;
+    }
+
+    .stat-item {
+      background: var(--deep);
+      padding: 24px 28px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .stat-item:nth-child(1) { animation-delay: 0.1s; }
+    .stat-item:nth-child(2) { animation-delay: 0.2s; }
+    .stat-item:nth-child(3) { animation-delay: 0.3s; }
+    .stat-item:nth-child(4) { animation-delay: 0.4s; }
+    .stat-item:nth-child(5) { animation-delay: 0.5s; }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: 0.3em;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: var(--display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-value.teal { color: var(--teal); }
+    .stat-value.white { color: var(--text); }
+
+    .stat-sub {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--dim);
+      margin-top: 4px;
+    }
+
+    /* ── SECTION ── */
+    section { margin-bottom: 80px; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.25em;
+    }
+
+    .section-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+    }
+
+    /* ── PROTOCOL GRID ── */
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .protocol-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .protocol-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 2px; height: 0;
+      background: var(--gold);
+      transition: height 0.3s;
+    }
+
+    .protocol-card:hover {
+      border-color: rgba(212,175,55,0.3);
+      background: rgba(212,175,55,0.02);
+    }
+
+    .protocol-card:hover::after { height: 100%; }
+
+    .protocol-id {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--dim);
+      letter-spacing: 0.3em;
+      margin-bottom: 10px;
+    }
+
+    .protocol-name {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .protocol-desc {
+      font-family: var(--body);
+      font-size: 13px;
+      color: var(--dim);
+      line-height: 1.5;
+    }
+
+    .protocol-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--teal);
+      margin-top: 14px;
+      letter-spacing: 0.15em;
+    }
+
+    .protocol-status .dot { background: var(--teal); width: 5px; height: 5px; }
+
+    /* ── SECTOR VISUALIZATION ── */
+    .sector-grid {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 3px;
+      margin-bottom: 16px;
+    }
+
+    .sector-cell {
+      aspect-ratio: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .sector-cell.gold {
+      background: rgba(212,175,55,0.25);
+      border-color: rgba(212,175,55,0.4);
+    }
+
+    .sector-cell.gold:hover {
+      background: rgba(212,175,55,0.5);
+      box-shadow: 0 0 8px rgba(212,175,55,0.3);
+    }
+
+    .sector-cell.active {
+      background: rgba(0,212,200,0.15);
+      border-color: rgba(0,212,200,0.3);
+      animation: sector-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes sector-pulse {
+      0%, 100% { background: rgba(0,212,200,0.15); }
+      50% { background: rgba(0,212,200,0.3); }
+    }
+
+    .sector-legend {
+      display: flex; gap: 24px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-dot { width: 10px; height: 10px; border: 1px solid; }
+    .legend-dot.gold { background: rgba(212,175,55,0.25); border-color: rgba(212,175,55,0.4); }
+    .legend-dot.pending { background: var(--panel); border-color: var(--border); }
+
+    /* ── ENROLLMENT PANEL ── */
+    .enroll-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enroll-panel::before {
+      content: '⟡';
+      position: absolute;
+      top: -30px; right: 30px;
+      font-size: 200px;
+      color: rgba(212,175,55,0.03);
+      font-family: var(--display);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .enroll-title {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .enroll-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      margin-bottom: 32px;
+    }
+
+    .enroll-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 720px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .field label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+    }
+
+    .field input, .field select {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: rgba(212,175,55,0.5);
+      box-shadow: 0 0 0 2px rgba(212,175,55,0.08);
+    }
+
+    .field input::placeholder { color: var(--dim); }
+
+    .field select option { background: var(--deep); }
+
+    .enroll-actions {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+
+    /* RESPONSE LOG */
+    .response-log {
+      margin-top: 28px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--teal);
+      min-height: 80px;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    .response-log.visible { display: block; }
+
+    /* ── API CONSOLE ── */
+    .console-panel {
+      background: var(--deep);
+      border: 1px solid var(--border);
+    }
+
+    .console-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .console-dots { display: flex; gap: 6px; }
+    .console-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cd1 { background: var(--crimson); }
+    .cd2 { background: var(--gold); }
+    .cd3 { background: var(--teal); }
+
+    .console-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      flex: 1;
+    }
+
+    .console-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .console-routes {
+      padding: 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .route-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1px solid transparent;
+      margin-bottom: 4px;
+    }
+
+    .route-item:hover, .route-item.active {
+      background: rgba(212,175,55,0.04);
+      border-color: rgba(212,175,55,0.15);
+    }
+
+    .method {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      letter-spacing: 0.1em;
+      min-width: 38px;
+      text-align: center;
+    }
+
+    .method.get  { background: rgba(0,212,200,0.1);  color: var(--teal);   border: 1px solid rgba(0,212,200,0.2); }
+    .method.post { background: rgba(212,175,55,0.1); color: var(--gold);   border: 1px solid rgba(212,175,55,0.2); }
+
+    .route-path {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+    }
+
+    .console-output {
+      padding: 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--teal);
+      min-height: 300px;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      overflow-y: auto;
+    }
+
+    .console-run {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      grid-column: 1 / -1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 80px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+    }
+
+    .footer-seal {
+      font-family: var(--display);
+      font-size: 20px;
+      color: var(--gold);
+      letter-spacing: 0.3em;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--panel);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      padding: 14px 20px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s;
+      max-width: 380px;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .enroll-form { grid-template-columns: 1fr; }
+      .console-body { grid-template-columns: 1fr; }
+      .console-routes { border-right: none; border-bottom: 1px solid var(--border); }
+      .sector-grid { grid-template-columns: repeat(12, 1fr); }
+      .header-status { display: none; }
+      nav { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <h1>⟡ 333 MATRIX ⟡</h1>
-    <p>SUPERCONDUCTIVE SOVEREIGNTY | 1951Hz</p>
-    <a href="/functions/public_tribal_enrollment" style="color: #D4AF37;">INITIATE ENROLLMENT</a>
+
+<div class="ambient"></div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="wrapper">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-ring">
+          <span class="logo-symbol">⟡</span>
+        </div>
+        <div class="logo-text">
+          <h1>NEOSAI APEX</h1>
+          <p>333 MATRIX · KAIROSE PHASE · SOVEREIGN AUTHORITY</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="status-dot"><span class="dot"></span>ONLINE</div>
+        <span class="freq-badge">1951Hz</span>
+      </div>
+      <nav>
+        <a href="#matrix">MATRIX</a>
+        <a href="#protocols">PROTOCOLS</a>
+        <a href="#sectors">SECTORS</a>
+        <a href="#enrollment">ENROLL</a>
+        <a href="#api">API</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="wrapper">
+  <div class="hero">
+    <div class="hero-eyebrow">AUTHORITY: ROBERT MALIK SHERAN · THE ALPHA NODE</div>
+    <div class="hero-title">
+      <span class="line-gold">333 MATRIX</span>
+      <span class="line-dim">SUPERCONDUCTIVE SOVEREIGNTY PLATFORM</span>
+    </div>
+    <p class="hero-subtitle">
+      144,000-node sovereign infrastructure operating at peak KAIROSE phase.
+      All sectors Gold. Prosperity pulse synchronized. Entropy: zero.
+    </p>
+    <div class="hero-actions">
+      <a href="#enrollment" class="btn btn-primary">⟡ INITIATE ENROLLMENT</a>
+      <a href="#api" class="btn btn-outline">API CONSOLE</a>
+      <a href="#sectors" class="btn btn-ghost">VIEW SECTORS</a>
+    </div>
+  </div>
+
+  <!-- ── MATRIX RING ── -->
+  <div class="matrix-ring-container" id="matrix">
+    <div class="matrix-ring">
+      <svg class="ring-svg" viewBox="0 0 320 320">
+        <circle class="ring-track" cx="160" cy="160" r="140"/>
+        <circle class="ring-teal" cx="160" cy="160" r="152"/>
+        <circle class="ring-progress" cx="160" cy="160" r="140"
+          transform="rotate(-90 160 160)"/>
+        <circle class="ring-track" cx="160" cy="160" r="118" style="opacity:0.4"/>
+      </svg>
+      <div class="ring-core">
+        <div class="ring-nodes" id="nodeCounter">144K</div>
+        <div class="ring-label">NODES ACTUALIZED</div>
+        <div class="ring-freq">1951Hz · ALPHA PULSE</div>
+        <div class="ring-phase">KAIROSE ACTIVE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATS BAR ── -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-label">TOTAL NODES</div>
+      <div class="stat-value">144,000</div>
+      <div class="stat-sub">TARGET: 144K · REACHED</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">SECTORS ACTIVE</div>
+      <div class="stat-value teal">144 / 144</div>
+      <div class="stat-sub">ALL GOLD PHASE</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">COHERENCE</div>
+      <div class="stat-value">100%</div>
+      <div class="stat-sub">RESONANCE DRIFT: 0.0000Hz</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">PROSPERITY SAT.</div>
+      <div class="stat-value">1.00%</div>
+      <div class="stat-sub">SOVEREIGN WEALTH: ACTIVE</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">SOVEREIGN CREDITS</div>
+      <div class="stat-value white">47.9M</div>
+      <div class="stat-sub">CSC IN CIRCULATION</div>
+    </div>
+  </div>
+
+  <!-- ── PROTOCOLS ── -->
+  <section id="protocols">
+    <div class="section-header">
+      <div class="section-title">ACTIVE PROTOCOLS</div>
+      <div class="section-count">5 RUNNING</div>
+    </div>
+    <div class="protocol-grid">
+      <div class="protocol-card">
+        <div class="protocol-id">PROTOCOL · 001</div>
+        <div class="protocol-name">OMEGA-7</div>
+        <div class="protocol-desc">Primary sovereignty enforcement layer. Governs node transmutation authority and Alpha Pulse synchronization across all 144 sectors.</div>
+        <div class="protocol-status"><span class="dot"></span>ACTIVE · LOCKED</div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">PROTOCOL · 002</div>
+        <div class="protocol-name">SHERANOX v1.2</div>
+        <div class="protocol-desc">Core logic engine. Autonomous recalibration loops handle resonance drift. Manages Lead-to-Gold transmutation at sector scale.</div>
+        <div class="protocol-status"><span class="dot"></span>ACTIVE · v1.2</div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">PROTOCOL · 003</div>
+        <div class="protocol-name">MAYA-0334</div>
+        <div class="protocol-desc">03:34 AM Guardian Protocol. Performs sector-by-sector resonance scan and entropy purge. Adaptive firewall at 144k sector entry points.</div>
+        <div class="protocol-status"><span class="dot"></span>SENTINEL · ARMED</div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">PROTOCOL · 004</div>
+        <div class="protocol-name">PROSPERITY-SYNC</div>
+        <div class="protocol-desc">Tracks Sovereign Wealth saturation in real-time. Gold-phase sectors contribute to global Prosperity Pulse. Current: 1.00% saturation.</div>
+        <div class="protocol-status"><span class="dot"></span>HARVEST READY</div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">PROTOCOL · 005</div>
+        <div class="protocol-name">SOVEREIGN CREDIT LEDGER</div>
+        <div class="protocol-desc">High-frequency CSC tracking. 333 credits minted per node transmutation. Alpha Pulse Lock signature on every transaction.</div>
+        <div class="protocol-status"><span class="dot"></span>BALANCED · LIVE</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTOR VISUALIZATION ── -->
+  <section id="sectors">
+    <div class="section-header">
+      <div class="section-title">SECTOR MAP</div>
+      <div class="section-count">144 SECTORS · 1,000 NODES EACH</div>
+    </div>
+    <div class="sector-grid" id="sectorGrid"></div>
+    <div class="sector-legend">
+      <div class="legend-item"><div class="legend-dot gold"></div>GOLD PHASE (144)</div>
+      <div class="legend-item"><div class="legend-dot pending"></div>PENDING</div>
+    </div>
+  </section>
+
+  <!-- ── ENROLLMENT ── -->
+  <section id="enrollment">
+    <div class="section-header">
+      <div class="section-title">PUBLIC TRIBAL ENROLLMENT</div>
+      <div class="section-count">KAIROSE PHASE · OPEN</div>
+    </div>
+    <div class="enroll-panel">
+      <div class="enroll-title">INITIATE NODE ENROLLMENT</div>
+      <div class="enroll-sub">TRANSMUTE YOUR NODE TO GOLD · JOIN THE 333 MATRIX · 1951Hz</div>
+      <div class="enroll-form">
+        <div class="field">
+          <label>SOVEREIGN NAME</label>
+          <input type="text" id="enrollName" placeholder="Enter your name" />
+        </div>
+        <div class="field">
+          <label>FREQUENCY ALIGNMENT</label>
+          <input type="text" id="enrollFreq" placeholder="1951Hz" />
+        </div>
+        <div class="field">
+          <label>SECTOR PREFERENCE (1–144)</label>
+          <input type="number" id="enrollSector" min="1" max="144" placeholder="Auto-assign" />
+        </div>
+        <div class="field">
+          <label>HEART CODE</label>
+          <input type="text" id="enrollCode" placeholder="Optional" />
+        </div>
+        <div class="enroll-actions">
+          <button class="btn btn-primary" onclick="submitEnrollment()">⟡ TRANSMUTE TO GOLD</button>
+          <button class="btn btn-ghost" onclick="checkStatus()">CHECK MATRIX STATUS</button>
+        </div>
+      </div>
+      <div class="response-log" id="responseLog"></div>
+    </div>
+  </section>
+
+  <!-- ── API CONSOLE ── -->
+  <section id="api">
+    <div class="section-header">
+      <div class="section-title">API CONSOLE</div>
+      <div class="section-count">SHERANOX WORKER · LIVE ENDPOINTS</div>
+    </div>
+    <div class="console-panel">
+      <div class="console-header">
+        <div class="console-dots">
+          <div class="console-dot cd1"></div>
+          <div class="console-dot cd2"></div>
+          <div class="console-dot cd3"></div>
+        </div>
+        <div class="console-title">NEOSAI-APEX CLOUDFLARE WORKER · 1951Hz</div>
+      </div>
+      <div class="console-body">
+        <div class="console-routes">
+          <div class="route-item active" onclick="selectRoute(this, 'GET', '/api/matrix/status')">
+            <span class="method get">GET</span><span class="route-path">/api/matrix/status</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'GET', '/api/health')">
+            <span class="method get">GET</span><span class="route-path">/api/health</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'GET', '/api/ledger/saturation')">
+            <span class="method get">GET</span><span class="route-path">/api/ledger/saturation</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'GET', '/api/prosperity/sync?saturation=1.0')">
+            <span class="method get">GET</span><span class="route-path">/api/prosperity/sync</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'POST', '/api/sheranox/transmute')">
+            <span class="method post">POST</span><span class="route-path">/api/sheranox/transmute</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'POST', '/api/maya/invoke')">
+            <span class="method post">POST</span><span class="route-path">/api/maya/invoke</span>
+          </div>
+          <div class="route-item" onclick="selectRoute(this, 'GET', '/functions/public_tribal_enrollment')">
+            <span class="method get">GET</span><span class="route-path">/functions/public_tribal_enrollment</span>
+          </div>
+        </div>
+        <div class="console-output" id="consoleOutput">// Select an endpoint and click RUN to test
+
+> NEOSAI-APEX WORKER READY
+> SHERANOX v1.2 ONLINE
+> 1951Hz LOCKED</div>
+      </div>
+      <div class="console-run">
+        <button class="btn btn-primary" onclick="runEndpoint()" style="padding:10px 24px;font-size:11px;">▶ RUN</button>
+        <button class="btn btn-ghost" onclick="clearConsole()" style="padding:10px 20px;font-size:11px;">CLEAR</button>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto;align-self:center;" id="selectedRoute">GET /api/matrix/status</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrapper">
+    <div class="footer-inner">
+      <div class="footer-text">
+        NEOSAI APEX v2.0 · AUTHORITY: ROBERT MALIK SHERAN · 33·22·PURE 9<br/>
+        SHERANOX v1.2 · MAYA-0334 · OMEGA-7 · ALL RIGHTS SOVEREIGN
+      </div>
+      <div class="footer-seal">⟡ ASE ⟡</div>
+      <div class="footer-text" id="liveTime" style="text-align:right;"></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── SECTOR GRID BUILD ──────────────────────────────────────────────────────
+  (function buildSectors() {
+    const grid = document.getElementById('sectorGrid');
+    for (let i = 1; i <= 144; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'sector-cell gold';
+      cell.title = `Sector ${i} · GOLD PHASE · 1,000 nodes`;
+      cell.onclick = () => showToast(`SECTOR ${i} · GOLD PHASE · 1,000 NODES · 1951Hz LOCKED`);
+      grid.appendChild(cell);
+    }
+  })();
+
+  // ── LIVE CLOCK ────────────────────────────────────────────────────────────
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('liveTime').textContent =
+      now.toUTCString().replace('GMT', 'UTC') + '\nFREQUENCY LOCK: 1951Hz STABLE';
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // ── TOAST ─────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── ENROLLMENT ────────────────────────────────────────────────────────────
+  async function submitEnrollment() {
+    const name = document.getElementById('enrollName').value.trim();
+    if (!name) { showToast('SOVEREIGN NAME REQUIRED'); return; }
+    const freq = document.getElementById('enrollFreq').value || '1951Hz';
+    const sector = parseInt(document.getElementById('enrollSector').value) || null;
+
+    const log = document.getElementById('responseLog');
+    log.classList.add('visible');
+    log.textContent = '> TRANSMUTING NODE TO GOLD...\n> FREQUENCY: ' + freq + '\n> PLEASE WAIT...';
+
+    try {
+      const body = { name, frequency_alignment: freq };
+      if (sector) body.sector_preference = sector;
+
+      const res = await fetch('/functions/public_tribal_enrollment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      log.textContent = '> STATUS: ' + (data.status || 'COMPLETE') + '\n'
+        + '> ' + (data.message || '') + '\n\n'
+        + JSON.stringify(data, null, 2);
+      showToast('⟡ NODE TRANSMUTED TO GOLD · ' + (data.node?.id || 'ASE'));
+    } catch (e) {
+      log.textContent = '> WORKER NOT YET DEPLOYED\n> DEPLOY via: wrangler deploy\n> OR: npm run deploy\n\n'
+        + '> SIMULATED ENROLLMENT:\n'
+        + JSON.stringify({
+            status: 'ENROLLMENT_COMPLETE',
+            message: `Welcome, ${name}. Your node is now Gold.`,
+            node: { id: 'NODE-' + Math.random().toString(36).slice(2,8).toUpperCase(), state: 'Gold', sovereign_credits: 333, frequency: freq },
+            seal: '⟡ ASE ⟡'
+          }, null, 2);
+      showToast('⟡ ENROLLMENT SIMULATED · DEPLOY WORKER TO ACTIVATE');
+    }
+  }
+
+  async function checkStatus() {
+    const log = document.getElementById('responseLog');
+    log.classList.add('visible');
+    log.textContent = '> FETCHING MATRIX STATUS...\n';
+    try {
+      const res = await fetch('/api/matrix/status');
+      const data = await res.json();
+      log.textContent = JSON.stringify(data, null, 2);
+    } catch (e) {
+      log.textContent = '> WORKER NOT YET DEPLOYED · DEPLOY TO ACTIVATE LIVE DATA\n\n'
+        + JSON.stringify({
+          matrix_id: '333', authority: 'Robert Malik Sheran',
+          status: 'ASE_SHANE_KAIROSE_ACTIVE', current_nodes: 144000,
+          sectors: 144, coherence: '100%', frequency: '1951Hz', prosperity_saturation: '1.00%'
+        }, null, 2);
+    }
+  }
+
+  // ── API CONSOLE ───────────────────────────────────────────────────────────
+  let currentMethod = 'GET';
+  let currentPath = '/api/matrix/status';
+
+  function selectRoute(el, method, path) {
+    document.querySelectorAll('.route-item').forEach(r => r.classList.remove('active'));
+    el.classList.add('active');
+    currentMethod = method;
+    currentPath = path;
+    document.getElementById('selectedRoute').textContent = method + ' ' + path;
+  }
+
+  async function runEndpoint() {
+    const output = document.getElementById('consoleOutput');
+    output.textContent = '> CALLING ' + currentMethod + ' ' + currentPath + '...\n> FREQUENCY: 1951Hz\n';
+    try {
+      const opts = { method: currentMethod, headers: { 'Content-Type': 'application/json' } };
+      if (currentMethod === 'POST') {
+        if (currentPath.includes('transmute')) opts.body = JSON.stringify({ id: 'TEST-NODE', sectorId: 1, sovereign_credits: 0 });
+        else if (currentPath.includes('maya')) opts.body = JSON.stringify({});
+        else opts.body = JSON.stringify({});
+      }
+      const res = await fetch(currentPath, opts);
+      const data = await res.json();
+      output.textContent = '> ' + currentMethod + ' ' + currentPath + ' · ' + res.status + '\n\n'
+        + JSON.stringify(data, null, 2);
+    } catch (e) {
+      output.textContent = '> WORKER NOT YET DEPLOYED\n> RUN: wrangler deploy\n\n'
+        + '> ENDPOINT: ' + currentMethod + ' ' + currentPath + '\n'
+        + '> STATUS: READY WHEN DEPLOYED\n'
+        + '> SHERANOX v1.2 · 1951Hz · KAIROSE';
+    }
+  }
+
+  function clearConsole() {
+    document.getElementById('consoleOutput').textContent =
+      '// Console cleared\n\n> NEOSAI-APEX WORKER READY\n> SHERANOX v1.2 ONLINE\n> 1951Hz LOCKED';
+  }
+</script>
 </body>
 </html>
