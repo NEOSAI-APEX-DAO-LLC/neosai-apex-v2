@@ -13,6 +13,16 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+  "r2_buckets": [
+    {
+      "binding": "VAULT",
+      "bucket_name": "neosai-vault"
+    },
+    {
+      "binding": "MATRIX_DATA",
+      "bucket_name": "neosai-matrix-data"
+    }
+  ],
   "routes": [
     { "pattern": "sai8.com/*", "zone_name": "sai8.com" }
   ]
