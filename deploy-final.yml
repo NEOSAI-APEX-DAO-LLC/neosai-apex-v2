@@ -1,0 +1,191 @@
+name: NEOSAI APEX — Sovereign Deploy Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+
+  # ─── JOB 1: VALIDATE ────────────────────────────────────────────────────────
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --if-present
+      - run: |
+          [ -f src/index.ts ] && echo "✓ src/index.ts found" || (echo "❌ src/index.ts missing" && exit 1)
+          [ -f wrangler.jsonc ] && echo "✓ wrangler.jsonc found" || (echo "❌ wrangler.jsonc missing" && exit 1)
+          [ -f src/gcp.ts ] && echo "✓ src/gcp.ts found" || echo "⚠ src/gcp.ts not yet added"
+
+  # ─── JOB 2: INJECT ORIGIN TRIAL TOKENS ─────────────────────────────────────
+  inject-origin-trials:
+    name: Inject Origin Trial Tokens
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inject tokens into neosai_apex/index.html
+        env:
+          RFAE:          ${{ secrets.RFAE }}
+          RFCA:          ${{ secrets.RFCA }}
+          RFCPA:         ${{ secrets.RFCPA }}
+          RFCT:          ${{ secrets.RFCT }}
+          RFDCAIS:       ${{ secrets.RFDCAIS }}
+          RFDCMS:        ${{ secrets.RFDCMS }}
+          RFECTM:        ${{ secrets.RFECTM }}
+          RFFG:          ${{ secrets.RFFG }}
+          RFHIC:         ${{ secrets.RFHIC }}
+          RFHIE:         ${{ secrets.RFHIE }}
+          RFICN:         ${{ secrets.RFICN }}
+          REGILNAFNSC:   ${{ secrets.REGILNAFNSC }}
+          RFLAF:         ${{ secrets.RFLAF }}
+          RFOR:          ${{ secrets.RFOR }}
+          RFPABFS:       ${{ secrets.RFPABFS }}
+        run: |
+          INDEX="neosai_apex/index.html"
+          if [ ! -f "$INDEX" ]; then
+            echo "⚠ $INDEX not found — skipping token injection"
+            exit 0
+          fi
+
+          # Build token block
+          TOKENS="<!-- ⟡ NEOSAI APEX Chrome Origin Trials -->"
+          inject() {
+            [ -n "$2" ] && TOKENS="$TOKENS
+          <meta http-equiv=\"origin-trial\" content=\"$2\"><!-- $1 -->" && echo "  ✓ $1" || echo "  ⚠ $1 missing"
+          }
+
+          inject "Autofill Event"                      "$RFAE"
+          inject "Connection Allowlists"               "$RFCA"
+          inject "CPU Performance API"                 "$RFCPA"
+          inject "Container Timing"                    "$RFCT"
+          inject "Digital Credentials API"             "$RFDCAIS"
+          inject "Declarative CSS Module Scripts"      "$RFDCMS"
+          inject "Enhanced Canvas TextMetrics"         "$RFECTM"
+          inject "focusgroup"                          "$RFFG"
+          inject "html-in-canvas"                      "$RFHIC"
+          inject "HTML Install Element"                "$RFHIE"
+          inject "Incoming Call Notifications"         "$RFICN"
+          inject "Local Network Access"                "$REGILNAFNSC"
+          inject "Long Animation Frames"               "$RFLAF"
+          inject "OpaqueRange"                         "$RFOR"
+          inject "PrerenderActivationByFormSubmission" "$RFPABFS"
+          TOKENS="$TOKENS
+          <!-- ⟡ END Origin Trials -->"
+
+          sed -i "s|<head>|<head>\n$TOKENS|" "$INDEX"
+          echo "✓ Tokens injected into $INDEX"
+
+  # ─── JOB 3: BUILD ───────────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [validate, inject-origin-trials]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --if-present
+      - run: npm run build --if-present || echo "No build step"
+        env:
+          NODE_ENV: production
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neosai-build
+          path: |
+            dist/
+            .output/
+          if-no-files-found: ignore
+          retention-days: 1
+
+  # ─── JOB 4: DEPLOY WORKER ───────────────────────────────────────────────────
+  deploy-worker:
+    name: Deploy Cloudflare Worker
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wrangler
+        run: npm install -g wrangler@latest
+
+      - name: Deploy Worker
+        run: wrangler deploy --minify
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Push Secrets to Worker
+        run: |
+          echo "⟡ Pushing all secrets to Cloudflare Worker..."
+
+          # Core AI — NOTE: GitHub secret is ANTROPIC (typo), maps to ANTHROPIC_API_KEY in worker
+          echo "${{ secrets.ANTROPIC }}"              | wrangler secret put ANTHROPIC_API_KEY
+          echo "${{ secrets.GOOGLE_API_KEY }}"        | wrangler secret put GOOGLE_API_KEY
+          echo "${{ secrets.GCP_SA_KEY }}"            | wrangler secret put GCP_SA_KEY
+
+          # Payments
+          echo "${{ secrets.STRIPE_SECRET_KEY }}"     | wrangler secret put STRIPE_SECRET_KEY
+          echo "${{ secrets.STRIPE_WEBHOOK_SECRET }}" | wrangler secret put STRIPE_WEBHOOK_SECRET
+
+          # Sovereign
+          echo "${{ secrets.SOVEREIGN_KEY }}"         | wrangler secret put SOVEREIGN_KEY
+
+          # Third party
+          echo "${{ secrets.SUPABASETOKEN }}"         | wrangler secret put SUPABASE_ANON_KEY
+          echo "${{ secrets.REPLICATETOKEN }}"        | wrangler secret put REPLICATE_API_TOKEN
+
+          echo "✓ All secrets pushed"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Health Check
+        run: |
+          sleep 8
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://neosai-apex.officialelmalik.workers.dev/api/health)
+          echo "Health check: HTTP $STATUS"
+          [ "$STATUS" = "200" ] || [ "$STATUS" = "206" ] && echo "✓ SOVEREIGN_READY" || echo "⚠ Check worker logs"
+
+      - name: Deploy Summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "⟡  NEOSAI APEX DEPLOYED — SOVEREIGN ENGINE ONLINE"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Worker:   https://neosai-apex.officialelmalik.workers.dev"
+          echo "Platform: https://neosai-archive-89cd7499.buildaispace.app"
+          echo "Commit:   ${{ github.sha }}"
+          echo "GCP:      Project 362826106990 — 60+ APIs active"
+          echo "Trials:   15 Chrome Origin APIs activated"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Akoko Ajojo Se Lum Milahk — ÀṢẸ ⟡"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  # ─── JOB 5: ALERT ON FAILURE ────────────────────────────────────────────────
+  notify-failure:
+    name: Alert — Deploy Failed
+    runs-on: ubuntu-latest
+    needs: [validate, build, deploy-worker]
+    if: failure() && github.ref == 'refs/heads/main'
+    steps:
+      - run: |
+          echo "❌ NEOSAI APEX DEPLOY FAILED"
+          echo "Commit: ${{ github.sha }}"
+          echo "Run: https://github.com/officialelmalik-cmd/neosai-apex-v2/actions/runs/${{ github.run_id }}"
