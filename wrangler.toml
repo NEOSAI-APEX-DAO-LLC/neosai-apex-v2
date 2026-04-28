@@ -1,0 +1,49 @@
+name = "neosai-apex"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── ROUTES ──────────────────────────────────────────────────────────────────
+# Routes handled by this worker
+routes = [
+  { pattern = "neosai-apex.officialelmalik.workers.dev/*", zone_name = "officialelmalik.workers.dev" }
+]
+
+# ─── R2 BUCKETS ───────────────────────────────────────────────────────────────
+[[r2_buckets]]
+binding = "NEOSAI_VAULT"
+bucket_name = "neosai-vault"
+
+[[r2_buckets]]
+binding = "NEOSAI_MATRIX"
+bucket_name = "neosai-matrix-data"
+
+# ─── ENVIRONMENT VARIABLES ────────────────────────────────────────────────────
+# These are non-secret vars. Secrets go in GitHub Actions + wrangler secret put
+[vars]
+ENVIRONMENT = "production"
+WORKER_VERSION = "NEOSAI-APEX-V3"
+
+# ─── SECRETS (set via: wrangler secret put SECRET_NAME) ──────────────────────
+# ANTHROPIC_API_KEY
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
+# SOVEREIGN_KEY
+# CLAUDE_CODE_ROUTINE_ID
+# CLAUDE_CODE_ROUTINE_TOKEN
+# SUPABASE_URL
+# SUPABASE_ANON_KEY
+
+# ─── DEVELOPMENT ──────────────────────────────────────────────────────────────
+[dev]
+port = 8787
+local_protocol = "http"
+
+# ─── PRODUCTION BUILD ─────────────────────────────────────────────────────────
+[build]
+command = ""
+
+# ─── OBSERVABILITY ────────────────────────────────────────────────────────────
+[observability]
+enabled = true
+head_sampling_rate = 1

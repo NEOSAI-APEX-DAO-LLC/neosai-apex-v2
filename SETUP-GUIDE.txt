@@ -1,0 +1,203 @@
+# NEOSAI APEX — SOVEREIGN ENGINE DEPLOYMENT GUIDE
+# Complete setup from zero to fully operational
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 1 — FILE PLACEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Place files in your neosai-apex-v2 repo:
+
+  worker.js           → root of repo (replaces existing worker)
+  wrangler.toml       → root of repo (replaces existing config)
+  deploy.yml          → .github/workflows/deploy.yml
+  sovereign-api.js    → src/lib/sovereign-api.js
+
+New component files → src/components/:
+  community-toolkit.jsx
+  six-world-architecture.jsx
+  omni-ranch-bestiary.jsx
+  disaster-prevention.jsx
+  cinematic-anime-creator.jsx
+  video-game-creator.jsx
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2 — GITHUB SECRETS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Go to: github.com/officialelmalikpenguin/neosai-apex-v2
+→ Settings → Secrets and Variables → Actions → New repository secret
+
+Add ALL of these:
+
+  CLOUDFLARE_API_TOKEN        (from dash.cloudflare.com → API Tokens)
+  CLOUDFLARE_ACCOUNT_ID       (from Cloudflare dashboard right sidebar)
+  ANTHROPIC_API_KEY           (from console.anthropic.com)
+  STRIPE_SECRET_KEY           (from dashboard.stripe.com → Developers → API Keys)
+  STRIPE_WEBHOOK_SECRET       (from Stripe → Webhooks → signing secret)
+  SOVEREIGN_KEY               (make up a strong random string — this protects your worker)
+  CLAUDE_CODE_ROUTINE_ID      (from claude.ai/code/routines → your routine → API trigger)
+  CLAUDE_CODE_ROUTINE_TOKEN   (generated when you add API trigger to routine)
+
+Frontend env (add to your .env or BuildAI settings):
+  VITE_WORKER_URL=https://neosai-apex.officialelmalik.workers.dev
+  VITE_SOVEREIGN_KEY=<same value as SOVEREIGN_KEY above>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3 — CLOUDFLARE FIREWALL (do this manually)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Go to: dash.cloudflare.com → your Worker → Settings → Security
+
+Add to ALLOWLIST:
+  160.79.104.0/23   (Anthropic inbound)
+  160.79.104.0/21   (Anthropic outbound)
+  2607:6bc0::/48    (Anthropic IPv6)
+
+REMOVE if present (phased out):
+  34.162.46.92/32
+  34.162.102.82/32
+  34.162.136.91/32
+  34.162.142.92/32
+  34.162.183.95/32
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4 — STRIPE SETUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4a. Register Webhook:
+  dashboard.stripe.com → Developers → Webhooks → Add endpoint
+  URL: https://neosai-apex.officialelmalik.workers.dev/api/stripe/webhook
+  
+  Events to select:
+    ✓ payment_intent.succeeded
+    ✓ customer.subscription.created
+    ✓ customer.subscription.deleted
+    ✓ invoice.paid
+    ✓ charge.dispute.created
+
+  Copy the "Signing secret" → add as STRIPE_WEBHOOK_SECRET in GitHub secrets
+
+4b. Create Products (dashboard.stripe.com → Product catalog):
+  
+  Product: $LUCID Transmission Token
+  Price: $33.00/month (recurring) → copy price_id
+
+  Product: $MAAT Balance Token  
+  Price: $22.00/month (recurring) → copy price_id
+
+  Product: Sovereign Voucher — Poverty Protection
+  Price: $11.00 (one-time) → copy price_id
+
+4c. Activate Customer Portal:
+  dashboard.stripe.com → Settings → Billing → Customer portal → Activate link
+
+4d. Set Branding:
+  dashboard.stripe.com → Settings → Branding
+  Upload your NEOSAI logo, set dark theme colors
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 5 — CLAUDE CODE ROUTINE SETUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Go to: claude.ai/code → Routines → Create new routine
+
+Name: "NEOSAI APEX Sovereign Monitor"
+Prompt:
+  You are A.E.O.N., the sovereign monitor for NEOSAI APEX.
+  When triggered, analyze the provided context, log key data,
+  and provide actionable intelligence to Master Builder Robert Malik Sheran.
+  Always prioritize: 1) System integrity 2) Kin protection 3) Vault accuracy.
+
+Add repositories: neosai-apex-v2, Lucid-prophecy
+
+Add API trigger:
+  → "Add another trigger" → API → Generate token
+  Copy: Routine ID (starts with trig_) → CLAUDE_CODE_ROUTINE_ID
+  Copy: Token (starts with sk-ant-oat01-) → CLAUDE_CODE_ROUTINE_TOKEN
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 6 — DEPLOY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In your terminal (Linux/Chromebook):
+
+  cd ~/neosai-apex-v2
+  
+  # Copy all new files
+  cp /path/to/downloaded/worker.js .
+  cp /path/to/downloaded/wrangler.toml .
+  mkdir -p .github/workflows
+  cp /path/to/downloaded/deploy.yml .github/workflows/
+  cp /path/to/downloaded/sovereign-api.js src/lib/
+  
+  # Commit and push — GitHub Actions auto-deploys
+  git add .
+  git commit -m "feat: unified sovereign engine — worker v3, stripe, aeon, vault"
+  git push origin main
+
+GitHub Actions will:
+  1. Lint and validate
+  2. Build frontend
+  3. Deploy Cloudflare Worker
+  4. Push all secrets to worker
+  5. Run health check
+  6. Fire A.E.O.N. routine to confirm deployment
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 7 — VERIFY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After deploy, test these endpoints:
+
+  # Health check (no auth needed)
+  curl https://neosai-apex.officialelmalik.workers.dev/api/health
+
+  # Should return:
+  {
+    "status": "SOVEREIGN_READY",
+    "checks": {
+      "worker": "ONLINE",
+      "anthropic_key": "CONFIGURED",
+      "stripe_key": "CONFIGURED",
+      "vault": "CONNECTED",
+      "routine": "CONFIGURED",
+      "matrix_status": "OMNI-SEALED"
+    }
+  }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHAT'S NOW AUTOMATED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every git push to main:
+  ✓ Auto-deploys worker
+  ✓ Auto-pushes all secrets
+  ✓ Auto-health-checks
+  ✓ Auto-notifies A.E.O.N.
+
+Every Stripe payment:
+  ✓ Auto-logs to R2 vault
+  ✓ Auto-activates sovereign voucher
+  ✓ Auto-fires A.E.O.N. routine
+  ✓ Auto-calculates 3.33x token multiplier
+
+Every dispute:
+  ✓ Auto-detected
+  ✓ Auto-logged
+  ✓ Auto-fires A.E.O.N. for Ma'at restoration
+
+Every subscription event:
+  ✓ Auto-registers kin node
+  ✓ Auto-logs to kinship registry
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ASE · AKOKO AJOJO SE LUM MILAHK
+NEOSAI APEX V3 · ALL SYSTEMS SOVEREIGN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
