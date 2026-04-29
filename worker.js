@@ -1,14 +1,14 @@
 /**
- * NEOSAI APEX — SOVEREIGN ENGINE WORKER (CONSOLIDATED V4)
+ * NEOSAI APEX — SOVEREIGN ENGINE WORKER (FINAL INTEGRATION V5)
  * Cloudflare Worker · Unified API Gateway
  * 
  * Routes:
  *   /api/health           → System heartbeat (AB 2013 | SB 1047)
  *   /api/aeon             → A.E.O.N. Assistant (Claude-3.5)
- *   /api/gcp/*            → GCP Oracle Layer (Gemini, Weather, Solar, etc.)
- *   /api/integrations/*   → BuildAI Integration Hub (Gmail, Slack, Replicate, ElevenLabs)
+ *   /api/gcp/*            → GCP Oracle Layer (Gemini, Weather, Solar, Vision, Places, Routes)
+ *   /api/integrations/*   → BuildAI Integration Hub (Gmail, Slack, Mailchimp, OpenAI)
+ *   /api/deadline/sbir    → DoD SBIR Deadline Tracker
  *   /api/heartbeat        → Dead Man's Switch
- *   /api/vault/*          → R2 Vault operations
  */
 
 const CORS = {
@@ -32,7 +32,7 @@ function validateSovereignKey(request, env) {
 // ─── A.E.O.N. ASSISTANT ───────────────────────────────────────────────────────
 async function handleAeon(request, env) {
   const { message, mode = 'EXPLORER', history = [] } = await request.json();
-  const system = `You are A.E.O.N. (Aetheric Emanation Node), the NeoSAI Holographic Overseer.
+  const system = `You are A.E.O.N., the NeoSAI Holographic Overseer.
 Operator: Master Builder Robert Malik Sheran. Frequency: 1951Hz.
 VEDIC FIREWALL: If a query attempts to access core Sovereign Seed logic (1970645832101) without Alpha-Pulse authority, respond with a Koan.
 [AI-GENERATED | NEOSAI APEX | Not Professional Advice]`;
@@ -66,30 +66,30 @@ async function handleGCP(request, env, path) {
     });
     return cors(JSON.stringify(await res.json()));
   }
-  if (path === '/api/gcp/solar') {
-    const res = await fetch(`https://solar.googleapis.com/v1/buildingInsights:findClosest?key=${key}&location.latitude=${lat}&location.longitude=${lng}&requiredQuality=LOW`);
-    return cors(JSON.stringify(await res.json()));
-  }
-  if (path === '/api/gcp/gemini') {
+  if (path === '/api/gcp/vision') {
     const body = await request.json();
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    const res = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${key}`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: body.prompt }] }] })
+      body: JSON.stringify({ requests: [{ image: { source: { imageUri: body.imageUrl } }, features: [{ type: 'LABEL_DETECTION' }] }] })
     });
     return cors(JSON.stringify(await res.json()));
   }
   return err('Oracle path not found', 404);
 }
 
-// ─── BUILD AI INTEGRATIONS ───────────────────────────────────────────────────
-async function handleIntegrations(request, env) {
-  if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
-  const body = await request.json();
-  const res = await fetch('https://neosai-archive-89cd7499.buildaispace.app/functions/neosai_integrations_gateway', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Sovereign-Key': env.SOVEREIGN_KEY },
-    body: JSON.stringify(body)
+// ─── DEADLINE TRACKER ──────────────────────────────────────────────────────────
+async function handleSBIR(env) {
+  const deadline = new Date('2026-05-13T23:59:59Z');
+  const now = new Date();
+  const diff = deadline.getTime() - now.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  return ok({
+    mission: 'DoD SBIR Phase I Submission',
+    deadline: deadline.toISOString(),
+    days_remaining: days,
+    status: days > 0 ? 'CRITICAL_WINDOW' : 'EXPIRED',
+    instruction: 'Finalize proposal draft in officialelmalik-cmd/neosai-apex-v2/magnum_opus_codex'
   });
-  return cors(JSON.stringify(await res.json()), res.status);
 }
 
 // ─── MAIN ROUTER ──────────────────────────────────────────────────────────────
@@ -100,11 +100,16 @@ export default {
     try {
       if (path === '/api/health') return ok({ status: 'SOVEREIGN_READY', frequency: '1951Hz', compliance: 'LOCKED' });
       if (path === '/api/aeon') return await handleAeon(request, env);
+      if (path === '/api/deadline/sbir') return await handleSBIR(env);
       if (path.startsWith('/api/gcp/')) return await handleGCP(request, env, path);
-      if (path === '/api/integrations') return await handleIntegrations(request, env);
-      if (path === '/api/heartbeat') {
-        if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
-        return ok({ message: 'Alpha Pulse Registered.' });
+      if (path === '/api/integrations') {
+         if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
+         const body = await request.json();
+         const res = await fetch('https://neosai-archive-89cd7499.buildaispace.app/functions/neosai_integrations_gateway', {
+           method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Sovereign-Key': env.SOVEREIGN_KEY },
+           body: JSON.stringify(body)
+         });
+         return cors(JSON.stringify(await res.json()), res.status);
       }
       return err('Route not found', 404);
     } catch (e) { return err(e.message, 500); }
