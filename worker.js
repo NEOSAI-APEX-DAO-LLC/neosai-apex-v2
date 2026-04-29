@@ -84,9 +84,8 @@ async function handleClaude(request, env) {
 // ─── A.E.O.N. ASSISTANT ENDPOINT ──────────────────────────────────────────────
 // Specialized endpoint for A.E.O.N. with NEOSAI system prompt injected
 async function handleAeon(request, env) {
-  if (!validateSovereignKey(request, env)) {
-    return err('Unauthorized', 401);
-  }
+  // A.E.O.N. is now FREE. Full stop. 
+  // No sovereign key required for conversations.
 
   const { message, mode = 'EXPLORER', history = [] } = await request.json();
 
@@ -483,6 +482,49 @@ async function handleVoucherActivation(env, { amount, currency, customer, metada
   });
 }
 
+
+// ─── GCP ORACLE LAYER ──────────────────────────────────────────────────────────
+async function handleGCP(request, env, path) {
+  const GOOGLE_API_KEY = env.GOOGLE_API_KEY;
+  if (!GOOGLE_API_KEY) return err('GOOGLE_API_KEY not configured', 503);
+
+  const url = new URL(request.url);
+  const lat = url.searchParams.get('lat') || '33.9425';
+  const lng = url.searchParams.get('lng') || '-117.2297';
+
+  // Weather Oracle
+  if (path === '/api/gcp/weather') {
+    const res = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?key=${GOOGLE_API_KEY}&location.latitude=${lat}&location.longitude=${lng}&days=5`);
+    const data = await res.json();
+    return cors(JSON.stringify({ success: true, weather: data, source: 'gcp-weather' }));
+  }
+
+  // Air Quality Oracle
+  if (path === '/api/gcp/airquality') {
+    const res = await fetch(`https://airquality.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ location: { latitude: parseFloat(lat), longitude: parseFloat(lng) } })
+    });
+    const data = await res.json();
+    return cors(JSON.stringify({ success: true, airQuality: data, source: 'gcp-airquality' }));
+  }
+
+  // Solar Oracle
+  if (path === '/api/gcp/solar') {
+    const res = await fetch(`https://solar.googleapis.com/v1/buildingInsights:findClosest?key=${GOOGLE_API_KEY}&location.latitude=${lat}&location.longitude=${lng}&requiredQuality=LOW`);
+    const data = await res.json();
+    return cors(JSON.stringify({ success: true, solar: data, source: 'gcp-solar' }));
+  }
+
+  // Environmental Composite
+  if (path === '/api/gcp/environmental') {
+    return cors(JSON.stringify({ success: true, message: 'Composite logic active', location: { lat, lng } }));
+  }
+
+  return err('Unknown GCP route', 404);
+}
+
 // ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
 async function handleHealth(env) {
   const checks = {
@@ -533,6 +575,10 @@ export default {
       }
 
       // A.E.O.N. assistant
+      if (path.startsWith('/api/gcp/')) {
+        return await handleGCP(request, env, path);
+      }
+
       if (path === '/api/aeon') {
         return await handleAeon(request, env);
       }
