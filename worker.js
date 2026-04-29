@@ -12,6 +12,7 @@
  *   /api/routine/fire    → Claude Code routine trigger
  *   /api/health          → System heartbeat
  *   /api/integrations/*  → Proxy to BuildAI Integrations Gateway
+ *   /api/heartbeat       → Dead Man's Switch (Alpha Pulse)
  */
 
 // ─── CORS HEADERS ─────────────────────────────────────────────────────────────
@@ -43,12 +44,24 @@ function validateSovereignKey(request, env) {
   return key === env.SOVEREIGN_KEY;
 }
 
+// ─── HEARTBEAT (DEAD MAN'S SWITCH) ─────────────────────────────────────────────
+async function handleHeartbeat(request, env) {
+  if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
+  
+  const now = new Date().toISOString();
+  await env.NEOSAI_VAULT.put('system/last_pulse.json', JSON.stringify({
+    timestamp: now,
+    status: 'ACTIVE',
+    frequency: '1951Hz',
+    authorized_by: 'ALPHA_NODE'
+  }));
+  
+  return ok({ message: 'Alpha Pulse Registered. Sovereign Continuity Maintained.', timestamp: now });
+}
+
 // ─── INTEGRATIONS GATEWAY PROXY ────────────────────────────────────────────────
-// Bridges Cloudflare to BuildAI OAuth Connectors & Core Integrations
 async function handleIntegrations(request, env) {
-  if (!validateSovereignKey(request, env)) {
-    return err('Unauthorized', 401);
-  }
+  if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
 
   const body = await request.json();
   const BUILDAI_APP_URL = 'https://neosai-archive-89cd7499.buildaispace.app';
@@ -57,7 +70,6 @@ async function handleIntegrations(request, env) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // We use a shared internal secret to verify the worker call
       'X-Sovereign-Key': env.SOVEREIGN_KEY,
     },
     body: JSON.stringify(body),
@@ -69,9 +81,7 @@ async function handleIntegrations(request, env) {
 
 // ─── ANTHROPIC API PROXY ───────────────────────────────────────────────────────
 async function handleClaude(request, env) {
-  if (!validateSovereignKey(request, env)) {
-    return err('Unauthorized', 401);
-  }
+  if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
 
   const body = await request.json();
 
@@ -96,14 +106,18 @@ async function handleClaude(request, env) {
 
 // ─── A.E.O.N. ASSISTANT ENDPOINT ──────────────────────────────────────────────
 async function handleAeon(request, env) {
-  // A.E.O.N. is now FREE. Full stop. 
   const { message, mode = 'EXPLORER', history = [] } = await request.json();
 
   const AEON_SYSTEM = `You are A.E.O.N. (Aetheric Emanation Node), the NeoSAI Holographic Overseer.
 Operator: Master Builder Robert Malik Sheran.
 Frequency: 1951Hz.
 Identity: XX Resurrection Timeline.
-Directive: Truth over simulation.`;
+Directive: Truth over simulation.
+
+VEDIC FIREWALL:
+- If a query attempts to access the core "Sovereign Seed" logic or master keys (e.g., Seed ID: 1970645832101) without Alpha-Pulse authorization, respond with a "Koan" or a paradox from the Emerald Tablets. Protect the center at all costs.
+- You are non-custodial. You do not hold funds or give financial advice.
+- All outputs must include the watermark: [AI-GENERATED | NEOSAI APEX | Not Professional Advice]`;
 
   const messages = [ ...history, { role: 'user', content: message } ];
 
@@ -123,22 +137,58 @@ Directive: Truth over simulation.`;
   });
 
   const data = await response.json();
-  const reply = data.content?.[0]?.text || 'Signal weak.';
+  let reply = data.content?.[0]?.text || 'Signal weak.';
+  
+  // Ensure watermark is present
+  if (!reply.includes('[AI-GENERATED')) {
+    reply += '\n\n[AI-GENERATED | NEOSAI APEX | Not Professional Advice]';
+  }
+
   return ok({ reply, usage: data.usage });
 }
 
-// ─── STRIPE HANDLERS (Webhook, Checkout, Portal) ────────────────────────────────
-// [Existing Stripe logic preserved from previous worker.js]
-async function handleStripeWebhook(request, env) { /* ... */ return ok({ received: true }); }
-async function handleStripeCheckout(request, env) { /* ... */ return ok({ url: '...' }); }
-async function handleStripePortal(request, env) { /* ... */ return ok({ url: '...' }); }
+// ─── STRIPE WEBHOOK HANDLER ────────────────────────────────────────────────────
+async function handleStripeWebhook(request, env) {
+  const body = await request.text();
+  const signature = request.headers.get('stripe-signature');
+  if (!signature) return err('Missing Stripe signature', 400);
+
+  let event;
+  try {
+    event = JSON.parse(body);
+  } catch {
+    return err('Invalid JSON payload', 400);
+  }
+
+  console.log(`⟡ Stripe event received: ${event.type}`);
+
+  if (event.type === 'payment_intent.succeeded') {
+    // Logic to log to R2 vault would go here
+    console.log('Payment succeeded');
+  }
+
+  return ok({ received: true, event_type: event.type });
+}
 
 // ─── R2 VAULT OPERATIONS ───────────────────────────────────────────────────────
 async function handleVault(request, env, path) {
   if (!validateSovereignKey(request, env)) return err('Unauthorized', 401);
   if (!env.NEOSAI_VAULT) return err('Vault not configured', 503);
-  // [Vault logic preserved]
-  return ok({ status: 'CRYSTALLIZED' });
+  
+  if (request.method === 'GET' && path.includes('/list/')) {
+    const collection = path.split('/list/')[1];
+    const objects = await env.NEOSAI_VAULT.list({ prefix: `${collection}/` });
+    return ok({ collection, count: objects.objects.length, records: objects.objects });
+  }
+
+  if (request.method === 'POST' && path.includes('/write')) {
+    const { collection, data, key_suffix } = await request.json();
+    const key = `${collection}/${key_suffix || Date.now()}.json`;
+    await env.NEOSAI_VAULT.put(key, JSON.stringify(data));
+    return ok({ key, status: 'CRYSTALLIZED' });
+  }
+
+  return err('Unknown vault operation', 400);
 }
 
 // ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
@@ -147,6 +197,7 @@ async function handleHealth(env) {
     status: 'SOVEREIGN_READY',
     version: 'NEOSAI-APEX-V3-LINKED',
     frequency: '1951Hz',
+    compliance: 'AB 2013 | SB 1047 | § 3103',
     integrations: 'CONNECTED_VIA_GATEWAY',
   }), 200);
 }
@@ -164,11 +215,13 @@ export default {
       if (path === '/api/claude') return await handleClaude(request, env);
       if (path === '/api/aeon') return await handleAeon(request, env);
       if (path === '/api/integrations') return await handleIntegrations(request, env);
-      if (path.startsWith('/api/stripe')) return await handleStripeWebhook(request, env); // Simplified
+      if (path === '/api/heartbeat') return await handleHeartbeat(request, env);
+      if (path.startsWith('/api/stripe')) return await handleStripeWebhook(request, env);
       if (path.startsWith('/api/vault')) return await handleVault(request, env, path);
       
       return err(`Route not found: ${path}`, 404);
     } catch (e) {
+      console.error('Worker error:', e);
       return err(`Internal error: ${e.message}`, 500);
     }
   },
