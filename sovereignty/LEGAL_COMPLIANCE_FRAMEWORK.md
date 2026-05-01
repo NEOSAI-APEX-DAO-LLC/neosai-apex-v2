@@ -1,27 +1,27 @@
-# NEOSAI APEX — LEGAL COMPLIANCE FRAMEWORK
+# NEOSAI APEX DAO — LEGAL COMPLIANCE FRAMEWORK
 **Architect:** Robert Malik Sheran | SDVOSB | USAF Disabled Veteran
 **Last Updated:** April 26, 2026
 
 ---
 
-## TERMS OF SERVICE — NEOSAI APEX PLATFORM
+## TERMS OF SERVICE — NEOSAI APEX DAO PLATFORM
 
 **Effective Date:** April 26, 2026
-**Entity:** NEOSAI APEX LLC (Wyoming)
+**Entity:** NEOSAI APEX DAO LLC (Wyoming)
 **Contact:** officialelmalik@gmail.com
 
 ### 1. NATURE OF SERVICE
 
-NeoSAI Apex is a **non-custodial AI software tool**. It does not:
+NeoSAI Apex DAO is a **non-custodial AI software tool**. It does not:
 - Hold, manage, or control user funds
 - Provide investment advice
 - Act as a financial intermediary
 - Take custody of user assets
 
-NeoSAI Apex provides software tools that users operate independently.
+NeoSAI Apex DAO provides software tools that users operate independently.
 All outputs are user-generated. The platform is a tool, not an advisor.
 
-This structure places NeoSAI Apex within the **§ 3103 exemption** as a
+This structure places NeoSAI Apex DAO within the **§ 3103 exemption** as a
 non-custodial software provider, not a money services business.
 
 ### 2. AI-GENERATED CONTENT DISCLOSURE (AB 2013 COMPLIANT)
@@ -34,11 +34,11 @@ Pursuant to California AB 2013 and applicable AI transparency requirements:
 - Users are notified when interacting with AI systems
 
 **Watermark Standard:** All AI-generated content produced by this platform
-carries the designation: [AI-GENERATED | NEOSAI APEX | Not Professional Advice]
+carries the designation: [AI-GENERATED | NEOSAI APEX DAO | Not Professional Advice]
 
 ### 3. SB 1047 FRONTIER AI SAFETY COMPLIANCE
 
-NeoSAI Apex operates under the following safety protocols:
+NeoSAI Apex DAO operates under the following safety protocols:
 
 - No autonomous financial transactions without explicit user authorization
 - Human-in-the-loop required for all consequential outputs
@@ -49,16 +49,16 @@ NeoSAI Apex operates under the following safety protocols:
 ### 4. INTELLECTUAL PROPERTY — SOVEREIGN SEEDS
 
 **User Outputs:** Users retain full ownership of all outputs generated
-using their inputs ("Data Seeds"). NeoSAI Apex claims no ownership
+using their inputs ("Data Seeds"). NeoSAI Apex DAO claims no ownership
 over user-generated content.
 
 **Platform IP:** The following are the exclusive property of Robert Malik
-Sheran / NEOSAI APEX LLC:
+Sheran / NEOSAI APEX DAO LLC:
 - SHERANOX logic engine and architecture
 - 333 Matrix sector management system
 - Proprietary model weights and training methodologies
 - "Sovereign Engine" framework [Seed ID: 1970645832101]
-- All marks: NEOSAI, NEOSAI APEX, SHERANOX, 333 MATRIX, 1AuET, SAI8
+- All marks: NEOSAI, NEOSAI APEX DAO, SHERANOX, 333 MATRIX, 1AuET, SAI8
 
 Unauthorized replication, reverse engineering, or reproduction of the
 Sovereign Engine logic constitutes IP infringement actionable under
@@ -66,13 +66,13 @@ Sovereign Engine logic constitutes IP infringement actionable under
 
 ### 5. SDVOSB STATUS DISCLOSURE
 
-NeoSAI Apex LLC is owned and operated by a Service-Disabled
+NeoSAI Apex DAO LLC is owned and operated by a Service-Disabled
 Veteran of the United States Air Force. This designation is maintained
 in compliance with 38 U.S.C. § 8127-8128 and 13 C.F.R. Part 128.
 
 ### 6. LIMITATION OF LIABILITY
 
-NeoSAI Apex is provided "as is." The platform does not guarantee:
+NeoSAI Apex DAO is provided "as is." The platform does not guarantee:
 - Financial outcomes
 - Accuracy of AI-generated analysis
 - Completeness of information
@@ -91,7 +91,7 @@ without regard to conflict of law principles.
 
 ### GRANT OF LICENSE
 
-NeoSAI Apex grants you a personal, non-exclusive, non-transferable
+NeoSAI Apex DAO grants you a personal, non-exclusive, non-transferable
 license to use the platform's tools to generate outputs ("Your Seeds").
 
 ### YOUR OWNERSHIP
@@ -101,11 +101,11 @@ You own 100% of:
 - Your input data ("Data Seeds")
 - Your personal configurations and preferences
 
-NeoSAI Apex does not claim any rights to your outputs.
+NeoSAI Apex DAO does not claim any rights to your outputs.
 
 ### PLATFORM OWNERSHIP
 
-NeoSAI Apex retains ownership of:
+NeoSAI Apex DAO retains ownership of:
 - The underlying engine that generates outputs
 - The interface and user experience
 - The trained model weights and logic
@@ -115,7 +115,7 @@ we own the press.
 
 ### PROHIBITED USES
 
-You may not use NeoSAI Apex to:
+You may not use NeoSAI Apex DAO to:
 - Generate content that violates applicable law
 - Attempt to extract or reverse-engineer the Sovereign Engine
 - Misrepresent AI-generated content as human-generated
@@ -123,7 +123,7 @@ You may not use NeoSAI Apex to:
 
 ### SOVEREIGNTY CLAUSE
 
-Your data is yours. NeoSAI Apex will not:
+Your data is yours. NeoSAI Apex DAO will not:
 - Sell your data to third parties
 - Use your inputs to train future models without consent
 - Share your usage data with advertisers
@@ -137,7 +137,7 @@ Required on all user-facing pages pursuant to AB 2013:
 ```html
 <footer class="ai-transparency">
   <p>
-    ⟡ NEOSAI APEX | AI-Powered Platform | 
+    ⟡ NEOSAI APEX DAO | AI-Powered Platform | 
     Outputs are AI-Generated and not professional financial, 
     legal, or medical advice. | 
     SDVOSB Certified | Robert Malik Sheran, Architect |
@@ -190,7 +190,7 @@ All master keys are environment variables, never in code.
 
 ## NUMISMATIC RESERVE BACKING DISCLOSURE
 
-NeoSAI Apex maintains a physical private reserve of precious metals
+NeoSAI Apex DAO maintains a physical private reserve of precious metals
 (Gold Eagles, Silver Rounds, Bronze) as a floor value reference
 for the 1AuET digital credit system.
 

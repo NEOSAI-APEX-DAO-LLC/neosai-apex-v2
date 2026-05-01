@@ -1,4 +1,4 @@
-# NEOSAI APEX — SOVEREIGN ENGINE DEPLOYMENT GUIDE
+# NEOSAI APEX DAO — SOVEREIGN ENGINE DEPLOYMENT GUIDE
 # Complete setup from zero to fully operational
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -105,9 +105,9 @@ STEP 5 — CLAUDE CODE ROUTINE SETUP
 
 Go to: claude.ai/code → Routines → Create new routine
 
-Name: "NEOSAI APEX Sovereign Monitor"
+Name: "NEOSAI APEX DAO Sovereign Monitor"
 Prompt:
-  You are A.E.O.N., the sovereign monitor for NEOSAI APEX.
+  You are A.E.O.N., the sovereign monitor for NEOSAI APEX DAO.
   When triggered, analyze the provided context, log key data,
   and provide actionable intelligence to Master Builder Robert Malik Sheran.
   Always prioritize: 1) System integrity 2) Kin protection 3) Vault accuracy.
@@ -199,5 +199,5 @@ Every subscription event:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ASE · AKOKO AJOJO SE LUM MILAHK
-NEOSAI APEX V3 · ALL SYSTEMS SOVEREIGN
+NEOSAI APEX DAO V3 · ALL SYSTEMS SOVEREIGN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

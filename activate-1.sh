@@ -1,5 +1,5 @@
 #!/bin/bash
-# ⟡ NEOSAI APEX — SOVEREIGN ACTIVATION SCRIPT
+# ⟡ NEOSAI APEX DAO — SOVEREIGN ACTIVATION SCRIPT
 # Run this in Google Cloud Shell
 # This script:
 # 1. Injects Origin Trial tokens into index.html
@@ -9,7 +9,7 @@
 set -e
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "⟡  NEOSAI APEX — SOVEREIGN ACTIVATION SEQUENCE"
+echo "⟡  NEOSAI APEX DAO — SOVEREIGN ACTIVATION SEQUENCE"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 cd ~/neosai-apex-v2/neosai-apex-v2
@@ -20,7 +20,7 @@ echo "⟡ STEP 1: Injecting Origin Trial tokens..."
 
 # These will be replaced by deploy.yml automatically on each deploy
 # For now inject placeholders that work immediately
-ORIGIN_TRIAL_BLOCK='  <!-- ⟡ NEOSAI APEX Chrome Origin Trials — Injected $(date) -->
+ORIGIN_TRIAL_BLOCK='  <!-- ⟡ NEOSAI APEX DAO Chrome Origin Trials — Injected $(date) -->
   <meta http-equiv="origin-trial" content="RFAE_TOKEN_PLACEHOLDER"><!-- Autofill Event -->
   <meta http-equiv="origin-trial" content="RFCA_TOKEN_PLACEHOLDER"><!-- Connection Allowlists -->
   <meta http-equiv="origin-trial" content="RFCPA_TOKEN_PLACEHOLDER"><!-- CPU Performance API -->

@@ -1,5 +1,5 @@
 /**
- * NEOSAI APEX — Google Cloud Integration Layer
+ * NEOSAI APEX DAO — Google Cloud Integration Layer
  * src/gcp.ts
  *
  * Connects all enabled GCP APIs to the NEOSAI platform:

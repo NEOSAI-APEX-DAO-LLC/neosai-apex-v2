@@ -1,4 +1,4 @@
-name: NEOSAI APEX — Sovereign Deploy Pipeline
+name: NEOSAI APEX DAO — Sovereign Deploy Pipeline
 
 on:
   push:
@@ -59,7 +59,7 @@ jobs:
           fi
 
           # Build token block
-          TOKENS="<!-- ⟡ NEOSAI APEX Chrome Origin Trials -->"
+          TOKENS="<!-- ⟡ NEOSAI APEX DAO Chrome Origin Trials -->"
           inject() {
             [ -n "$2" ] && TOKENS="$TOKENS
           <meta http-equiv=\"origin-trial\" content=\"$2\"><!-- $1 -->" && echo "  ✓ $1" || echo "  ⚠ $1 missing"
@@ -167,7 +167,7 @@ jobs:
       - name: Deploy Summary
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "⟡  NEOSAI APEX DEPLOYED — SOVEREIGN ENGINE ONLINE"
+          echo "⟡  NEOSAI APEX DAO DEPLOYED — SOVEREIGN ENGINE ONLINE"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "Worker:   https://neosai-apex.officialelmalik.workers.dev"
           echo "Platform: https://neosai-archive-89cd7499.buildaispace.app"
@@ -186,6 +186,6 @@ jobs:
     if: failure() && github.ref == 'refs/heads/main'
     steps:
       - run: |
-          echo "❌ NEOSAI APEX DEPLOY FAILED"
+          echo "❌ NEOSAI APEX DAO DEPLOY FAILED"
           echo "Commit: ${{ github.sha }}"
           echo "Run: https://github.com/officialelmalik-cmd/neosai-apex-v2/actions/runs/${{ github.run_id }}"

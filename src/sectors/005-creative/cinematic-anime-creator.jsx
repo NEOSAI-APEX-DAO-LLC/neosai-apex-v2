@@ -78,7 +78,7 @@ function buildImageUrl(prompt, width = 768, height = 1024, seed = null) {
 
 // ─── AI PROMPT ENGINEER via Anthropic API ────────────────────────────────────
 async function engineerPrompt(subject, style, camera, mood, extra) {
-  const systemPrompt = `You are the NEOSAI APEX Cinematic Anime Prompt Engineer. Your job is to transform basic descriptions into masterclass-level Stable Diffusion / Flux image generation prompts for the NEOSAI aesthetic. 
+  const systemPrompt = `You are the NEOSAI APEX DAO Cinematic Anime Prompt Engineer. Your job is to transform basic descriptions into masterclass-level Stable Diffusion / Flux image generation prompts for the NEOSAI aesthetic. 
 
 Rules:
 - Always build on the Afrofuturist / Kemetic / Yoruba / sacred geometry foundation

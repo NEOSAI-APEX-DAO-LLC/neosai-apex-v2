@@ -1,4 +1,4 @@
-name: NEOSAI APEX — Sovereign Deploy Pipeline
+name: NEOSAI APEX DAO — Sovereign Deploy Pipeline
 
 on:
   push:
@@ -149,7 +149,7 @@ jobs:
       - name: Print Deploy Summary
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "⟡ NEOSAI APEX DEPLOYED SUCCESSFULLY"
+          echo "⟡ NEOSAI APEX DAO DEPLOYED SUCCESSFULLY"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "Worker: https://neosai-apex.officialelmalik.workers.dev"
           echo "Commit: ${{ github.sha }}"
@@ -173,7 +173,7 @@ jobs:
               -H "anthropic-version: 2023-06-01" \
               -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
               -H "Content-Type: application/json" \
-              -d "{\"text\": \"NEOSAI APEX deployment successful. Commit: ${{ github.sha }}. Branch: ${{ github.ref_name }}. All systems green. Sovereign Engine online.\"}"
+              -d "{\"text\": \"NEOSAI APEX DAO deployment successful. Commit: ${{ github.sha }}. Branch: ${{ github.ref_name }}. All systems green. Sovereign Engine online.\"}"
             echo "✓ A.E.O.N. notified"
           else
             echo "Claude Code routine not configured — skipping notification"
@@ -194,5 +194,5 @@ jobs:
               -H "anthropic-version: 2023-06-01" \
               -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
               -H "Content-Type: application/json" \
-              -d "{\"text\": \"ALERT: NEOSAI APEX deploy FAILED. Commit: ${{ github.sha }}. Workflow: ${{ github.workflow }}. Run: ${{ github.run_id }}. Investigate and repair immediately.\"}"
+              -d "{\"text\": \"ALERT: NEOSAI APEX DAO deploy FAILED. Commit: ${{ github.sha }}. Workflow: ${{ github.workflow }}. Run: ${{ github.run_id }}. Investigate and repair immediately.\"}"
           fi

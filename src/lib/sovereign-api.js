@@ -1,5 +1,5 @@
 /**
- * NEOSAI APEX — Sovereign API Client
+ * NEOSAI APEX DAO — Sovereign API Client
  * 
  * All API calls route through the Cloudflare Worker proxy.
  * The ANTHROPIC_API_KEY and STRIPE_SECRET_KEY never touch the frontend.
@@ -76,7 +76,7 @@ export const claude = {
       body: {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 300,
-        system: 'You are the NEOSAI APEX Cinematic Anime Prompt Engineer. Output ONLY the final prompt string. Max 200 words. End with: anime key visual, masterpiece, best quality, 8k',
+        system: 'You are the NEOSAI APEX DAO Cinematic Anime Prompt Engineer. Output ONLY the final prompt string. Max 200 words. End with: anime key visual, masterpiece, best quality, 8k',
         messages: [{
           role: 'user',
           content: `Subject: ${subject}\nStyle: ${style}\nCamera: ${camera}\nMood: ${mood}\nExtra: ${extra}\n\nEngineer the optimal prompt:`,

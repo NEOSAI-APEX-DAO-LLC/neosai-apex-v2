@@ -1,5 +1,5 @@
 /**
- * NEOSAI APEX — Stripe Webhook Signature Verification
+ * NEOSAI APEX DAO — Stripe Webhook Signature Verification
  * 
  * Replace the handleStripeWebhook function in worker.js with this version.
  * This properly verifies Stripe's HMAC-SHA256 signature to prevent fake events.

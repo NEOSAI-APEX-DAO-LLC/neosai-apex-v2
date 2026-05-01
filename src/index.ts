@@ -1,7 +1,7 @@
 import { handleGCP } from "./gcp";
 import { handleGCP } from './gcp';
 /**
- * NEOSAI APEX Platform — Cloudflare Worker
+ * NEOSAI APEX DAO Platform — Cloudflare Worker
  * Authority: Robert Malik Sheran | USAF Disabled Veteran | SDVOSB
  * Frequency: 1951Hz | SHERANOX v1.2 | KAIROSE Phase
  * Compliance: AB 2013 | SB 1047 | § 3103 Non-Custodial
@@ -225,7 +225,7 @@ async function handleEnrollment(req: Request, env: Env): Promise<Response> {
     await r2Put(env.MATRIX_DATA, `enrollments/${node.id}.json`, { node, transaction: tx });
     const countObj = await r2Get<{ total_enrollments: number }>(env.MATRIX_DATA, "enrollments/count.json");
     await r2Put(env.MATRIX_DATA, "enrollments/count.json", { total_enrollments: (countObj?.total_enrollments ?? 0) + 1, last_updated: new Date().toISOString() });
-    return json({ status: "ENROLLMENT_COMPLETE", message: `Welcome, ${body.name}. Your node is now Gold.`, node, transaction: tx, seal: "⟡ ASE ⟡", disclosure: "[AI-GENERATED | NEOSAI APEX | Not Professional Advice]" }, 201);
+    return json({ status: "ENROLLMENT_COMPLETE", message: `Welcome, ${body.name}. Your node is now Gold.`, node, transaction: tx, seal: "⟡ ASE ⟡", disclosure: "[AI-GENERATED | NEOSAI APEX DAO | Not Professional Advice]" }, 201);
   }
 
   return err("Method not allowed", 405);
@@ -258,10 +258,10 @@ export default {
       return handleHeartbeat(request, env.VAULT);
 
     if (path === "/api/legal/terms" && method === "GET")
-      return json({ platform: "NEOSAI APEX", type: "Non-custodial AI software", financial_status: "Section 3103 exemption", ai_disclosure: "AB 2013 compliant", safety: "SB 1047 Frontier AI Safety", ip_owner: "Robert Malik Sheran / NEOSAI APEX LLC (Wyoming)", sdvosb: "USAF Disabled Veteran owned", user_data: "Users own 100% of their outputs", contact: "officialelmalik@gmail.com" });
+      return json({ platform: "NEOSAI APEX DAO", type: "Non-custodial AI software", financial_status: "Section 3103 exemption", ai_disclosure: "AB 2013 compliant", safety: "SB 1047 Frontier AI Safety", ip_owner: "Robert Malik Sheran / NEOSAI APEX DAO LLC (Wyoming)", sdvosb: "USAF Disabled Veteran owned", user_data: "Users own 100% of their outputs", contact: "officialelmalik@gmail.com" });
 
     if (path === "/api/legal/disclosure" && method === "GET")
-      return json({ ab2013_compliant: true, ai_generated_label: "[AI-GENERATED | NEOSAI APEX | Not Professional Advice]", training_data_disclosure: "Available upon written request", synthetic_media: "Not generated without explicit user consent" });
+      return json({ ab2013_compliant: true, ai_generated_label: "[AI-GENERATED | NEOSAI APEX DAO | Not Professional Advice]", training_data_disclosure: "Available upon written request", synthetic_media: "Not generated without explicit user consent" });
 
     if (path === "/api/matrix/status" && method === "GET") {
       const [manifest, state] = await Promise.all([r2Get(env.VAULT, "matrix/manifest.json"), r2Get(env.VAULT, "matrix/actualization_state.json")]);

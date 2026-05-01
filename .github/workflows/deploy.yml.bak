@@ -1,4 +1,4 @@
-name: Deploy NEOSAI APEX → Cloudflare Workers
+name: Deploy NEOSAI APEX DAO → Cloudflare Workers
 
 on:
   push:
@@ -32,4 +32,4 @@ jobs:
 
       - name: Deployment Complete
         run: |
-          echo "⟡ NEOSAI APEX deployed · SHERANOX v1.2 · 1951Hz · KAIROSE ACTIVE"
+          echo "⟡ NEOSAI APEX DAO deployed · SHERANOX v1.2 · 1951Hz · KAIROSE ACTIVE"

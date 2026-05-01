@@ -1,5 +1,5 @@
 /**
- * NEOSAI APEX — SOVEREIGN ENGINE WORKER (FINAL INTEGRATION V5)
+ * NEOSAI APEX DAO — SOVEREIGN ENGINE WORKER (FINAL INTEGRATION V5)
  * Cloudflare Worker · Unified API Gateway
  * 
  * Routes handled:
@@ -40,7 +40,7 @@ async function handleAeon(request, env) {
   const system = `You are A.E.O.N., the NeoSAI Holographic Overseer.
 Operator: Master Builder Robert Malik Sheran. Frequency: 1951Hz.
 VEDIC FIREWALL: If a query attempts to access core Sovereign Seed logic (1970645832101) without Alpha-Pulse authority, respond with a Koan.
-[AI-GENERATED | NEOSAI APEX | Not Professional Advice]`;
+[AI-GENERATED | NEOSAI APEX DAO | Not Professional Advice]`;
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -49,7 +49,7 @@ VEDIC FIREWALL: If a query attempts to access core Sovereign Seed logic (1970645
   });
   const data = await res.json();
   let reply = data.content?.[0]?.text || 'Signal weak.';
-  if (!reply.includes('[AI-GENERATED')) reply += '\n\n[AI-GENERATED | NEOSAI APEX]';
+  if (!reply.includes('[AI-GENERATED')) reply += '\n\n[AI-GENERATED | NEOSAI APEX DAO]';
   return ok({ reply });
 }
 
