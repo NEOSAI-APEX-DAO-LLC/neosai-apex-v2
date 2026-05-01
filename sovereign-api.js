@@ -187,6 +187,40 @@ export const routine = {
   },
 };
 
+// ─── SOVEREIGNTY API ──────────────────────────────────────────────────────────
+export const sovereignty = {
+  /**
+   * Send a Heartbeat Pulse to maintain active status.
+   * Required every 90 days per the Sovereign Continuity Protocol.
+   */
+  async sendPulse(auth_key) {
+    return request('/api/heartbeat', {
+      body: { auth_key },
+    });
+  },
+};
+
+// ─── MARKETPLACE & BIOFEEDBACK ────────────────────────────────────────────────
+export const economy = {
+  /**
+   * Submit biofeedback for resonance rewards
+   */
+  async submitBiofeedback(node_id, coherence_score, streak_days) {
+    return request('/api/biofeedback', {
+      body: { node_id, coherence_score, streak_days },
+    });
+  },
+
+  /**
+   * Buy a blueprint from the Omni-Tech Exchange
+   */
+  async buyBlueprint(node_id, blueprint_id, price, currency) {
+    return request('/api/marketplace/purchase', {
+      body: { node_id, blueprint_id, price, currency },
+    });
+  },
+};
+
 // ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
 export const health = {
   async check() {
@@ -196,5 +230,5 @@ export const health = {
 };
 
 // ─── DEFAULT EXPORT ───────────────────────────────────────────────────────────
-const api = { aeon, claude, stripe, vault, routine, health };
+const api = { aeon, claude, stripe, vault, routine, sovereignty, health, economy };
 export default api;

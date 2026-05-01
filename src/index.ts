@@ -1,3 +1,5 @@
+import { handleGCP } from "./gcp";
+import { handleGCP } from './gcp';
 /**
  * NEOSAI APEX Platform — Cloudflare Worker
  * Authority: Robert Malik Sheran | USAF Disabled Veteran | SDVOSB
@@ -327,6 +329,7 @@ export default {
       return json({ status: "SIGNAL_RECEIVED", agent: body.agent, action: body.action, frequency: "1951Hz", matrix_status: systemStatus, timestamp: new Date().toISOString(), seal: "⟡ ASE ⟡" });
     }
 
-    return env.ASSETS.fetch(request);
+    if (path.startsWith("/api/gcp")) { const r = await handleGCP(request, env as any, path); if (r) return r; }
+  return env.ASSETS.fetch(request);
   },
 };

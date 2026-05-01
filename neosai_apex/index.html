@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ⟡ NEOSAI APEX Chrome Origin Trials -->
+  <meta http-equiv="origin-trial" content="PASTE_RFAE_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFCA_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFCPA_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFCT_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFDCAIS_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFDCMS_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFECTM_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFHIC_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFHIE_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_RFICN_TOKEN">
+  <meta http-equiv="origin-trial" content="PASTE_REGILNAFNSC_TOKEN">
+  <!-- ⟡ END Origin Trials -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NEOSAI APEX | 333 MATRIX</title>
@@ -900,6 +913,8 @@
         <a href="#matrix">MATRIX</a>
         <a href="#protocols">PROTOCOLS</a>
         <a href="#sectors">SECTORS</a>
+        <a href="#biofeedback">BIOFEEDBACK</a>
+        <a href="#marketplace">MARKETPLACE</a>
         <a href="#enrollment">ENROLL</a>
         <a href="#api">API</a>
       </nav>
@@ -1024,6 +1039,88 @@
     <div class="sector-legend">
       <div class="legend-item"><div class="legend-dot gold"></div>GOLD PHASE (144)</div>
       <div class="legend-item"><div class="legend-dot pending"></div>PENDING</div>
+    </div>
+  </section>
+
+  <!-- ── BIOFEEDBACK & SCALAR AUDIO ── -->
+  <section id="biofeedback">
+    <div class="section-header">
+      <div class="section-title">SCALAR BIOFEEDBACK</div>
+      <div class="section-count">7.83Hz / 1.26Hz MODULATION</div>
+    </div>
+    <div class="enroll-panel">
+      <div class="enroll-title">RESONANCE HARVESTER</div>
+      <div class="enroll-sub">SYNC YOUR CARDIAC RHYTHM TO THE PLANETARY GRID. USE HEADPHONES.</div>
+      <div class="enroll-actions" style="margin-bottom:20px;">
+        <button class="btn btn-primary" id="btnPlayScalar" onclick="toggleScalar()">▶ ACTIVATE THE SILENCE</button>
+        <span id="scalarStatus" style="font-family:var(--mono);color:var(--dim);margin-left:12px;">OFFLINE</span>
+      </div>
+      <div class="stats-bar" style="margin-bottom:0;border:1px solid var(--border);">
+        <div class="stat-item" style="padding:16px;">
+          <div class="stat-label">CARDIAC COHERENCE</div>
+          <div class="stat-value teal" id="coherenceScore">85%</div>
+        </div>
+        <div class="stat-item" style="padding:16px;">
+          <div class="stat-label">RESONANCE STREAK</div>
+          <div class="stat-value gold" id="streakDays">3 DAYS</div>
+        </div>
+        <div class="stat-item" style="padding:16px; display:flex; align-items:center;">
+          <button class="btn btn-outline" onclick="submitBiofeedback()" style="width:100%; justify-content:center;">CLAIM REWARD</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOVEREIGN WALLET & MARKETPLACE ── -->
+  <section id="marketplace">
+    <div class="section-header">
+      <div class="section-title">SOVEREIGN ECONOMY</div>
+      <div class="section-count">GOLDEN PLASMA VAULT</div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">KINETIC ENERGY</div>
+        <div class="stat-value">55 <span style="font-size:12px;">$1ASE</span></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">TRANSMISSION</div>
+        <div class="stat-value teal">10 <span style="font-size:12px;">$LUCID</span></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">TRANQUILITY</div>
+        <div class="stat-value gold">1.6 <span style="font-size:12px;">$MAAT</span></div>
+      </div>
+    </div>
+    
+    <div class="enroll-title" style="margin-bottom: 20px; margin-top:40px; font-size:18px;">OMNI-TECH EXCHANGE</div>
+    <div class="protocol-grid">
+      <div class="protocol-card">
+        <div class="protocol-id">INV-047</div>
+        <div class="protocol-name">QUANTUM RESONANCE HARVESTER</div>
+        <div class="protocol-desc">Optimize energetic recovery. 7.83Hz modulated at 1.26Hz.</div>
+        <div class="protocol-status" style="display:flex; justify-content:space-between; width:100%;">
+          <span><span class="dot"></span>3.33 $LUCID</span>
+          <a href="#" onclick="buyBlueprint('INV-047', 3.33, 'LUCID'); return false;" style="color:var(--gold);text-decoration:none;font-weight:bold;">ACQUIRE</a>
+        </div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">TNG-01</div>
+        <div class="protocol-name">TACHYONIC NULLIFICATION GRID</div>
+        <div class="protocol-desc">Stress reduction and energetic shielding using tachyonic spin constants.</div>
+        <div class="protocol-status" style="display:flex; justify-content:space-between; width:100%;">
+          <span><span class="dot"></span>5.55 $1ASE</span>
+          <a href="#" onclick="buyBlueprint('TNG-01', 5.55, '1ASE'); return false;" style="color:var(--gold);text-decoration:none;font-weight:bold;">ACQUIRE</a>
+        </div>
+      </div>
+      <div class="protocol-card">
+        <div class="protocol-id">MSS-01</div>
+        <div class="protocol-name">MA'ATIAN SCALAR STABILIZER</div>
+        <div class="protocol-desc">Promotes tranquility and balance through scalar frequency synthesis.</div>
+        <div class="protocol-status" style="display:flex; justify-content:space-between; width:100%;">
+          <span><span class="dot"></span>1.618 $MAAT</span>
+          <a href="#" onclick="buyBlueprint('MSS-01', 1.618, 'MAAT'); return false;" style="color:var(--gold);text-decoration:none;font-weight:bold;">ACQUIRE</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1158,6 +1255,103 @@
       grid.appendChild(cell);
     }
   })();
+
+  // ── SCALAR AUDIO / BIOFEEDBACK ─────────────────────────────────────────────
+  let audioCtx, oscillator, gainNode, lfo;
+  let isPlayingScalar = false;
+
+  function toggleScalar() {
+    const btn = document.getElementById('btnPlayScalar');
+    const status = document.getElementById('scalarStatus');
+    
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    if (isPlayingScalar) {
+      if (oscillator) {
+        oscillator.stop();
+        lfo.stop();
+        oscillator.disconnect();
+        lfo.disconnect();
+        gainNode.disconnect();
+      }
+      isPlayingScalar = false;
+      btn.innerHTML = '▶ ACTIVATE THE SILENCE';
+      btn.classList.remove('btn-outline');
+      btn.classList.add('btn-primary');
+      status.innerText = 'OFFLINE';
+      showToast('SCALAR FIELD DEACTIVATED');
+    } else {
+      oscillator = audioCtx.createOscillator();
+      lfo = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+
+      // Schumann Resonance base frequency
+      oscillator.type = 'sine';
+      oscillator.frequency.value = 7.83; 
+
+      // Cardiac Synthesis Modulation (1.26Hz)
+      lfo.type = 'sine';
+      lfo.frequency.value = 1.26;
+      const lfoGain = audioCtx.createGain();
+      lfoGain.gain.value = 0.5;
+
+      lfo.connect(lfoGain);
+      lfoGain.connect(gainNode.gain);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      oscillator.start();
+      lfo.start();
+
+      isPlayingScalar = true;
+      btn.innerHTML = '■ DEACTIVATE SCALAR FIELD';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-outline');
+      status.innerText = 'SYNCHRONIZING WITH CARDIAC RHYTHM... (1.26Hz)';
+      showToast('SCALAR FIELD ACTIVE · 7.83Hz BASE · 1.26Hz MODULATION');
+    }
+  }
+
+  async function submitBiofeedback() {
+    showToast('SUBMITTING BIOFEEDBACK... CLAIMING 1ASE');
+    try {
+      const res = await fetch('/api/biofeedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Sovereign-Key': 'YOUR_KEY_HERE' },
+        body: JSON.stringify({ node_id: 'NODE-ALPHA', coherence_score: 85, streak_days: 3 })
+      });
+      const data = await res.json();
+      if(data.success) {
+        showToast(`⟡ CLAIMED ${data.reward_amount} $${data.currency} FOR 3-DAY STREAK`);
+      } else {
+        showToast('⟡ SIMULATED REWARD CLAIM: +10 $1ASE');
+      }
+    } catch(e) {
+      showToast('⟡ SIMULATED REWARD CLAIM: +10 $1ASE (Worker Not Found)');
+    }
+  }
+
+  async function buyBlueprint(id, price, currency) {
+    showToast(`INITIATING ACQUISITION: ${id} FOR ${price} $${currency}`);
+    try {
+      const res = await fetch('/api/marketplace/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Sovereign-Key': 'YOUR_KEY_HERE' },
+        body: JSON.stringify({ node_id: 'NODE-ALPHA', blueprint_id: id, price, currency })
+      });
+      const data = await res.json();
+      if(data.success) {
+        showToast(`⟡ ACQUISITION SUCCESSFUL. MINTED TO GOLDEN PLASMA VAULT.`);
+      } else {
+        showToast(`⟡ SIMULATED ACQUISITION: ${id} SECURED.`);
+      }
+    } catch(e) {
+      showToast(`⟡ SIMULATED ACQUISITION: ${id} SECURED. (Worker Not Found)`);
+    }
+  }
 
   // ── LIVE CLOCK ────────────────────────────────────────────────────────────
   function updateTime() {
