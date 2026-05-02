@@ -158,48 +158,18 @@ After deploy, test these endpoints:
   # Health check (no auth needed)
   curl https://neosai-apex.officialelmalik.workers.dev/api/health
 
-as  # Test Protocol Registry activation (requires Sovereign Key)
-  curl -X POST https://neosai-apex.officialelmalik.workers.dev/api/protocol \
-    -H "Content-Type: application/json" \
-    -H "X-Sovereign-Key: YOUR_KEY" \
-    -d '{"protocol": "AbsolutionProtocol", "data": { "intent": "activate" }}'
-
   # Should return:
   {
     "status": "SOVEREIGN_READY",
+    "checks": {
+      "worker": "ONLINE",
+      "anthropic_key": "CONFIGURED",
+      "stripe_key": "CONFIGURED",
+      "vault": "CONNECTED",
+      "routine": "CONFIGURED",
+      "matrix_status": "OMNI-SEALED"
+    }
   }
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 8 — PROTOTYPE ORGANIZATION (144 SECTOR STANDARDS)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-To prevent registry drift, organize prototypes into domain-specific sub-directories:
-
-  src/sectors/001-sovereign/     → AbsolutionProtocol, SovereignEconomy, Portal
-  src/sectors/002-genomic/       → CommunityDNA, DNAAnalysis, GenomicVault
-  src/sectors/003-planetary/     → Terraforming, DisasterPrevention, Syntropy
-  src/sectors/004-intelligence/  → ApexAssistant, NeoSAIOverseer, GeniusApps
-  src/sectors/005-creative/      → MediaForge, AnimeGameEngine, CinematicAnime
-  src/sectors/006-quantum/       → ZeroPoint, ScalarVoid, FractalPhase
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-STEP 9 — MASS MIGRATION COMMANDS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Run these commands to move prototypes into their sectors:
-
-  mkdir -p src/sectors/001-sovereign src/sectors/002-genomic src/sectors/003-planetary \
-           src/sectors/004-intelligence src/sectors/005-creative src/sectors/006-quantum \
-           src/sectors/007-archive src/sectors/008-immersion
-
-  mv src/components/AbsolutionProtocol* src/components/Sovereign* src/components/CouncilOf144K* src/components/KingsSacrifice* src/sectors/001-sovereign/
-  mv src/components/CommunityDNA* src/components/DNAAnalysis* src/components/OmniGenomicVault* src/components/AncestralLineage* src/sectors/002-genomic/
-  mv src/components/Terraforming* src/components/Disaster* src/components/Planetary* src/components/OmniRisk* src/sectors/003-planetary/
-  mv src/components/ApexAssistant* src/components/NeoSAI* src/components/Overseer* src/components/Genius* src/components/OmniDiscovery* src/sectors/004-intelligence/
-  mv src/components/MediaForge* src/components/AnimeGame* src/components/Storybook* src/components/Multimedia* src/sectors/005-creative/
-  mv src/components/ZeroPoint* src/components/ScalarVoid* src/components/FractalPhase* src/components/DimensionalHarmonics* src/sectors/006-quantum/
-  mv src/components/archive* src/components/Archive* src/components/DocumentGrid* src/sectors/007-archive/
-  mv src/components/immersion* src/components/Aetheric* src/components/Archetypal* src/components/PoweredDream* src/sectors/008-immersion/
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
