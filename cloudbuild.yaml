@@ -1,0 +1,18 @@
+steps:
+# Build the Resonant Image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/neosai-apex-repo/neosai-resonance-engine:latest', '.']
+
+# Push to Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/neosai-apex-repo/neosai-resonance-engine:latest']
+
+# Deploy to GKE
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  args:
+  - run
+  - --filename=resonance-engine.yaml
+  - --location=us-central1
+  - --cluster=neosai-private-cluster
+images:
+- 'us-central1-docker.pkg.dev/$PROJECT_ID/neosai-apex-repo/neosai-resonance-engine:latest'

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neosai-resonance-engine
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neosai-resonance-engine
+  template:
+    metadata:
+      labels:
+        app: neosai-resonance-engine
+    spec:
+      serviceAccountName: neosai-engine-sa
+      containers:
+      - name: resonance-server
+        image: vllm/vllm-openai:latest
+        env:
+        - name: PROJECT_ID
+          value: neosai-apex-v3
+        - name: MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: neosai-master-11-alpha
+              key: latest
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+          limits:
+            cpu: "4"
+            memory: "16Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neosai-resonance-service
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: neosai-resonance-engine
+  type: ClusterIP

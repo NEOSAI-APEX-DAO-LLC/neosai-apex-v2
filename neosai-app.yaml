@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neosai-backend
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: neosai-backend
+  template:
+    metadata:
+      labels:
+        app: neosai-backend
+    spec:
+      serviceAccountName: neosai-engine-sa
+      containers:
+      - name: main
+        image: us-central1-docker.pkg.dev/neosai-apex-v3/neosai-apex-repo/neosai-portal:v1
+        ports:
+        - containerPort: 80
+        env:
+        - name: PROJECT_ID
+          value: "neosai-apex-v3"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neosai-service
+spec:
+  type: ClusterIP
+  selector:
+    app: neosai-backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
